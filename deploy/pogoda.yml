@@ -1,0 +1,169 @@
+---
+- name: Deploy Pogoda App
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Validate version variable
+      assert:
+        that:
+          - version is defined
+          - version | length > 0
+        fail_msg: "Missing version in inventory"
+
+    - name: Fetch git tags locally
+      command: git fetch --tags --force
+      delegate_to: localhost
+      become: false
+      changed_when: false
+
+    - name: Check that selected version tag exists
+      command: git rev-parse "refs/tags/{{ version }}"
+      delegate_to: localhost
+      become: false
+      changed_when: false
+
+    - name: Create local release archive
+      shell: |
+        cd {{ playbook_dir }}/..
+        git archive --format=tar --output=/tmp/{{ app_name }}-{{ env_name }}-{{ version }}.tar {{ version }}
+      delegate_to: localhost
+      become: false
+      changed_when: true
+      args:
+        executable: /bin/bash      
+      
+
+    - name: Install packages on Debian/Ubuntu
+      apt:
+        name:
+          - python3
+          - python3-venv
+          - python3-pip
+          - sqlite3
+          - rsync
+          - tar
+        state: present
+        update_cache: true
+      when: ansible_os_family == "Debian"
+
+    - name: Install packages on Alpine
+      apk:
+        name:
+          - python3
+          - py3-pip
+          - sqlite
+          - rsync
+          - tar
+        state: present
+        update_cache: true
+      when: ansible_os_family == "Alpine"
+
+    - name: Ensure app group exists
+      group:
+        name: "{{ app_name }}"
+        system: true
+
+    - name: Ensure app user exists on Debian/Ubuntu
+      user:
+        name: "{{ app_name }}"
+        group: "{{ app_name }}"
+        home: "{{ app_dir }}"
+        shell: /usr/sbin/nologin
+        system: true
+        create_home: false
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure app user exists on Alpine
+      user:
+        name: "{{ app_name }}"
+        group: "{{ app_name }}"
+        home: "{{ app_dir }}"
+        shell: /sbin/nologin
+        system: true
+        create_home: false
+      when: ansible_os_family == "Alpine"
+
+    - name: Ensure app directory exists
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ app_name }}"
+        group: "{{ app_name }}"
+        mode: "0755"
+
+    - name: Extract release archive to target
+      unarchive:
+        src: "/tmp/{{ app_name }}-{{ env_name }}-{{ version }}.tar"
+        dest: "{{ app_dir }}"
+        owner: "{{ app_name }}"
+        group: "{{ app_name }}"
+        extra_opts:
+          - --exclude=.git
+          - --exclude=.env
+          - --exclude=pogoda.db
+        remote_src: false
+
+    - name: Create virtualenv
+      command: "python3 -m venv {{ venv_dir }}"
+      args:
+        creates: "{{ venv_dir }}/bin/python"
+
+    - name: Install Python requirements
+      pip:
+        requirements: "{{ app_dir }}/requirements.txt"
+        virtualenv: "{{ venv_dir }}"
+
+    - name: Ensure ownership
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ app_name }}"
+        group: "{{ app_name }}"
+        recurse: true
+
+    - name: Install systemd unit
+      template:
+        src: templates/pogoda.service.j2
+        dest: /etc/systemd/system/{{ service_name }}.service
+        mode: "0644"
+      when: ansible_os_family == "Debian"
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: true
+      when: ansible_os_family == "Debian"
+
+    - name: Enable and restart systemd service
+      systemd:
+        name: "{{ service_name }}"
+        enabled: true
+        state: restarted
+      when: ansible_os_family == "Debian"
+
+    - name: Install OpenRC conf.d
+      template:
+        src: templates/pogoda.confd.j2
+        dest: /etc/conf.d/{{ service_name }}
+        mode: "0644"
+      when: ansible_os_family == "Alpine"
+
+    - name: Install OpenRC init script
+      template:
+        src: templates/pogoda.openrc.j2
+        dest: /etc/init.d/{{ service_name }}
+        mode: "0755"
+      when: ansible_os_family == "Alpine"
+
+    - name: Enable OpenRC service
+      command: rc-update add {{ service_name }} default
+      register: openrc_enable
+      changed_when: "'added' in openrc_enable.stdout"
+      failed_when: false
+      when: ansible_os_family == "Alpine"
+
+    - name: Restart OpenRC service
+      service:
+        name: "{{ service_name }}"
+        state: restarted
+      when: ansible_os_family == "Alpine"
