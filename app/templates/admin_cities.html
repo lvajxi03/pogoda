@@ -1,0 +1,15 @@
+<h1>Miasta</h1>
+
+<form method="post">
+  <input name="name" placeholder="Nazwa">
+  <input name="lat" placeholder="Lat">
+  <input name="lon" placeholder="Lon">
+  <button>Dodaj</button>
+</form>
+
+<ul>
+{% for c in cities %}
+  <li>{{ c.name }} ({{ c.latitude }}, {{ c.longitude }})</li>
+{% endfor %}
+</ul>
+

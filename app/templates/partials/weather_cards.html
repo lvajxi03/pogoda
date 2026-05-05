@@ -1,0 +1,73 @@
+<div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+{% for item in cities %}
+  {% set city = item.city %}
+  {% set w = item.weather %}
+
+  <div class="relative p-4 rounded-2xl shadow bg-gray-100 dark:bg-gray-800 overflow-hidden">
+
+    <!-- duża ikona aktualnej pogody -->
+    <div class="absolute top-4 right-4 text-5xl opacity-90">
+      {{ item.icon }}
+    </div>
+
+    <!-- aktualna pogoda -->
+    <div class="pr-20">
+      <h2 class="text-xl font-semibold">{{ city.name }}</h2>
+
+      <p class="text-sm text-gray-600 dark:text-gray-300">
+        {{ item.description }}
+      </p>
+
+      <div class="mt-3">
+        <p class="text-3xl font-bold">
+          {{ w.current.temperature_2m }}°C
+        </p>
+        <p>Odczuwalna: {{ w.current.apparent_temperature }}°C</p>
+        <p>Wilgotność: {{ w.current.relative_humidity_2m }}%</p>
+        <p>Wiatr: {{ w.current.wind_speed_10m }} km/h</p>
+      </div>
+    </div>
+
+    <!-- prognoza dzienna -->
+    {% if w.daily is defined %}
+      <div class="mt-4 border-t border-gray-300 dark:border-gray-700 pt-3">
+        <h3 class="font-semibold mb-2">Najbliższe dni</h3>
+
+        <div class="space-y-2 text-sm">
+          {% for i in range(w.daily.time | length) %}
+            <div class="flex items-center justify-between gap-3">
+
+              <!-- ikonka + dzień tygodnia -->
+              <span class="flex items-center gap-2 w-36">
+                <span class="text-lg">
+                  {{ w.daily.weather_code[i] | weather_icon }}
+                </span>
+                <span>
+                  {{ w.daily.time[i] | as_weekday }}
+                </span>
+              </span>
+
+              <!-- dzień / noc -->
+              <span class="flex gap-2 items-baseline whitespace-nowrap">
+                <span class="font-semibold text-gray-900 dark:text-white">
+                  {{ w.daily.temperature_2m_max[i] }}°C
+                </span>
+                <span class="font-light text-gray-500 dark:text-gray-400">
+                  {{ w.daily.temperature_2m_min[i] }}°C
+                </span>
+              </span>
+
+              <!-- opady -->
+              <span class="text-gray-600 dark:text-gray-300 whitespace-nowrap">
+                opady: {{ w.daily.precipitation_probability_max[i] }}%
+              </span>
+
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+{% endfor %}
+</div>

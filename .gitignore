@@ -1,0 +1,9 @@
+*.*~
+*.bak
+*~
+__pycache__
+.venv
+vent
+.env
+*.pyc
+	

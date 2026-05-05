@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-2xl mb-4">Prognoza pogody</h1>
+
+<div
+  hx-get="/partials/weather"
+  hx-trigger="load, every 60s"
+  hx-swap="innerHTML"
+>
+  Ładowanie...
+</div>
+{% endblock %}
+
