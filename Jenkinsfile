@@ -63,7 +63,7 @@ pipeline {
                     sh '''
                        ansible-playbook \
                          -i deploy/inventory/dev.yml \
-                         -i "$CONNECTION_FILE" \
+                         -i "${CONNECTION_FILE}" \
                          deploy/pogoda.yml
                        '''
                 }
@@ -81,7 +81,7 @@ pipeline {
                     sh '''
                        ansible-playbook \
                          -i deploy/inventory/int.yml \
-                         -i "$CONNECTION_FILE" \
+                         -i "${CONNECTION_FILE}" \
                          deploy/pogoda.yml
                        '''
                 }
@@ -99,7 +99,7 @@ pipeline {
                     sh '''
                        ansible-playbook \
                          -i deploy/inventory/prod.yml \
-                         -i "$CONNECTION_FILE" \
+                         -i "${CONNECTION_FILE}" \
                          deploy/pogoda.yml
                        '''
                 }
