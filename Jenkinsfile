@@ -62,7 +62,7 @@ pipeline {
                 ]) {
                     sh '''
                        ansible-playbook \
-                         -i deploy/inventory/dev.yml \
+                         -i deploy/inventory/dev.yaml \
                          -i .jenkins_connection.yml \
                          deploy/pogoda.yml
                        '''
@@ -80,7 +80,7 @@ pipeline {
                 ]) {
                     sh '''
                        ansible-playbook \
-                         -i deploy/inventory/int.yml \
+                         -i deploy/inventory/int.yaml \
                          -i .jenkins_connection.yml \
                          deploy/pogoda.yml
                        '''
@@ -98,7 +98,7 @@ pipeline {
                 ]) {
                     sh '''
                        ansible-playbook \
-                         -i deploy/inventory/prod.yml \
+                         -i deploy/inventory/prod.yaml \
                          -i .jenkins_connection.yml \
                          deploy/pogoda.yml
                        '''
