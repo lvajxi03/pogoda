@@ -23,7 +23,7 @@ pipeline {
                     def changed = sh(
                         script: '''
                             git diff --name-only HEAD~1 HEAD \
-                                | grep '^deploy/.*\\.toml$' \
+                                | grep '^deploy/inventory/.*\\.yaml$' \
                                 | sort || true
                             ''',
                         returnStdout: true
@@ -37,7 +37,7 @@ pipeline {
 
                     def envs = []
                     changed.split("\\n").each { file ->
-                        def envName = file.replace("deploy/", "").replace(".toml", "")
+                        def envName = file.replace("deploy/inventory/", "").replace(".toml", "")
                         if (["dev", "int", "prod"].contains(envName)) {
                             envs.add(envName)
                         }
