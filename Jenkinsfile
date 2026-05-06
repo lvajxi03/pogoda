@@ -63,7 +63,7 @@ pipeline {
                     sh '''
                        ansible-playbook \
                          -i deploy/inventory/dev.yml \
-                         -i .jenkins_connection.yml
+                         -i .jenkins_connection.yml \
                          deploy/pogoda.yml
                        '''
                 }
@@ -99,7 +99,7 @@ pipeline {
                     sh '''
                        ansible-playbook \
                          -i deploy/inventory/prod.yml \
-                         -i .jenkins_connection.yml
+                         -i .jenkins_connection.yml \
                          deploy/pogoda.yml
                        '''
                 }
