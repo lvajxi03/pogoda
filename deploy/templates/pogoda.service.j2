@@ -1,0 +1,16 @@
+[Unit]
+Description=Pogoda
+After=network.target
+
+[Service]
+Type=simple
+User={{ app_user }}
+Group={{ app_group }}
+WorkingDirectory={{ app_dir }}
+EnvironmentFile={{ app_dir }}/.env
+ExecStart={{ venv_dir }}/bin/uvicorn {{ app_module }} --host {{ host_bind }} --port {{ port_bind }}
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
