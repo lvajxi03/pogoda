@@ -58,12 +58,12 @@ pipeline {
             }
             steps {
                 configFileProvider([
-                    configFile(fileId: 'pogoda-dev-specifics', variable: 'CONNECTION_FILE')
+                    configFile(fileId: 'pogoda-dev-specifics', targetLocation: '.jenkins_connection.yml')
                 ]) {
                     sh '''
                        ansible-playbook \
                          -i deploy/inventory/dev.yml \
-                         -i "${CONNECTION_FILE}" \
+                         -i .jenkins_connection.yml
                          deploy/pogoda.yml
                        '''
                 }
@@ -76,12 +76,12 @@ pipeline {
             }
             steps {
                 configFileProvider([
-                    configFile(fileId: 'pogoda-int-specifics', variable: 'CONNECTION_FILE')
+                    configFile(fileId: 'pogoda-int-specifics', targetLocation: '.jenkins_connection.yml')
                 ]) {
                     sh '''
                        ansible-playbook \
                          -i deploy/inventory/int.yml \
-                         -i "${CONNECTION_FILE}" \
+                         -i .jenkins_connection.yml \
                          deploy/pogoda.yml
                        '''
                 }
@@ -94,12 +94,12 @@ pipeline {
             }
             steps {
                 configFileProvider([
-                    configFile(fileId: 'pogoda-prod-specifics', variable: 'CONNECTION_FILE')
+                    configFile(fileId: 'pogoda-prod-specifics', targetLocation: '.jenkins_connection.yml')
                 ]) {
                     sh '''
                        ansible-playbook \
                          -i deploy/inventory/prod.yml \
-                         -i "${CONNECTION_FILE}" \
+                         -i .jenkins_connection.yml
                          deploy/pogoda.yml
                        '''
                 }
