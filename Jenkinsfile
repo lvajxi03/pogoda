@@ -23,7 +23,7 @@ pipeline {
                     def changed = sh(
                         script: '''
                             git diff --name-only HEAD~1 HEAD \
-                                | grep '^deploy/inventory/.*\\.yaml$' \
+                                | grep '^deploy/inventory/.*\.yaml$' \
                                 | sort || true
                             ''',
                         returnStdout: true
