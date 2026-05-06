@@ -61,7 +61,7 @@ pipeline {
                     configFile(fileId: 'pogoda-dev-specifics', variable: 'CONNECTION_FILE')
                 ]) {
                     sh '''
-                       ansible-pogoda \
+                       ansible-playbook \
                          -i deploy/inventory/dev.yml \
                          -i "$CONNECTION_FILE" \
                          deploy/pogoda.yml
@@ -79,7 +79,7 @@ pipeline {
                     configFile(fileId: 'pogoda-int-specifics', variable: 'CONNECTION_FILE')
                 ]) {
                     sh '''
-                       ansible-pogoda \
+                       ansible-playbook \
                          -i deploy/inventory/int.yml \
                          -i "$CONNECTION_FILE" \
                          deploy/pogoda.yml
@@ -97,7 +97,7 @@ pipeline {
                     configFile(fileId: 'pogoda-prod-specifics', variable: 'CONNECTION_FILE')
                 ]) {
                     sh '''
-                       ansible-pogoda \
+                       ansible-playbook \
                          -i deploy/inventory/prod.yml \
                          -i "$CONNECTION_FILE" \
                          deploy/pogoda.yml
