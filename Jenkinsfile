@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     triggers {
-	pollSCM('H/5 * * * *')
+        pollSCM('H/5 * * * *')
     }
 
     options {
@@ -57,17 +57,15 @@ pipeline {
                 expression { env.CHANGED_ENVS?.split(" ")?.contains("dev") }
             }
             steps {
-                lock(resource: 'weather-dev') {
-                    configFileProvider([
-                        configFile(fileId: 'pogoda-dev-specifics', variable: 'CONNECTION_FILE')
-                    ]) {
-                        sh '''
-                           ansible-playbook \
-                             -i deploy/inventory/dev.yml \
-                             -i "$CONNECTION_FILE" \
-                             deploy/playbook.yml
-                           '''
-                    }
+                configFileProvider([
+                    configFile(fileId: 'pogoda-dev-specifics', variable: 'CONNECTION_FILE')
+                ]) {
+                    sh '''
+                       ansible-playbook \
+                         -i deploy/inventory/dev.yml \
+                         -i "$CONNECTION_FILE" \
+                         deploy/playbook.yml
+                       '''
                 }
             }
         }
@@ -77,17 +75,15 @@ pipeline {
                 expression { env.CHANGED_ENVS?.split(" ")?.contains("int") }
             }
             steps {
-                lock(resource: 'weather-int') {
-                    configFileProvider([
-                        configFile(fileId: 'pogoda-int-specifics', variable: 'CONNECTION_FILE')
-                    ]) {
-                        sh '''
-                           ansible-playbook \
-                             -i deploy/inventory/int.yml \
-                             -i "$CONNECTION_FILE" \
-                             deploy/playbook.yml
-                           '''
-                    }
+                configFileProvider([
+                    configFile(fileId: 'pogoda-int-specifics', variable: 'CONNECTION_FILE')
+                ]) {
+                    sh '''
+                       ansible-playbook \
+                         -i deploy/inventory/int.yml \
+                         -i "$CONNECTION_FILE" \
+                         deploy/playbook.yml
+                       '''
                 }
             }
         }
@@ -97,20 +93,17 @@ pipeline {
                 expression { env.CHANGED_ENVS?.split(" ")?.contains("prod") }
             }
             steps {
-                lock(resource: 'weather-prod') {
-                    configFileProvider([
-                        configFile(fileId: 'pogoda-prod-specifics', variable: 'CONNECTION_FILE')
-                    ]) {
-                        sh '''
-                           ansible-playbook \
-                             -i deploy/inventory/prod.yml \
-                             -i "$CONNECTION_FILE" \
-                             deploy/playbook.yml
-                           '''
-                    }
+                configFileProvider([
+                    configFile(fileId: 'pogoda-prod-specifics', variable: 'CONNECTION_FILE')
+                ]) {
+                    sh '''
+                       ansible-playbook \
+                         -i deploy/inventory/prod.yml \
+                         -i "$CONNECTION_FILE" \
+                         deploy/playbook.yml
+                       '''
                 }
             }
         }
     }
 }
-
