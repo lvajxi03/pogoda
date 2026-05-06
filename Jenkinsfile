@@ -37,8 +37,7 @@ pipeline {
 
                     def envs = []
                     changed.split("\\n").each { file ->
-                        def envName = file.replace("deploy/inventory/", "").replace(".toml", "")
-			echo "$envName";
+                        def envName = file.replace("deploy/inventory/", "").replace(".yaml", "")
                         if (["dev", "int", "prod"].contains(envName)) {
                             envs.add(envName)
                         }
