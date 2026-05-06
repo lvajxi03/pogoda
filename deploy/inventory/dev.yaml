@@ -1,20 +1,14 @@
 all:
   vars:
-    env_name: dev
-    version: v0.0.0.2.13
-    app_name: pogoda
-    app_user: pogoda
-    app_module: app.main:app
+    ansible_shell_executable: /bin/bash
     app_dir: /opt/pogoda
     app_group: pogoda
-    venv_dir: /opt/pogoda/venv
-    service_name: pogoda
+    app_module: app.main:app
+    app_name: pogoda
+    app_user: pogoda
+    env_name: dev
     host_bind: 0.0.0.0
     port_bind: 8000
-    ansible_shell_executable: /bin/bash
-
-  hosts:
-    pogoda-dev:
-      ansible_host: 10.10.10.11
-      ansible_user: marcin
-
+    service_name: pogoda
+    venv_dir: /opt/pogoda/venv
+    version: v0.0.0.2.14

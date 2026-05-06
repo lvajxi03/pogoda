@@ -61,7 +61,7 @@ pipeline {
                     configFile(fileId: 'pogoda-dev-specifics', targetLocation: '.jenkins_connection.yml')
                 ]) {
                     sh '''
-                       ansible-playbook \
+                       ansible-playbook -vvvv \
                          -i deploy/inventory/dev.yaml \
                          -i .jenkins_connection.yml \
                          deploy/pogoda.yml
