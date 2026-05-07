@@ -11,4 +11,4 @@ all:
     service_name: pogoda
     host_bind: 0.0.0.0
     port_bind: 8000
-    version: v0.0.1.1
+    version: v0.0.2
