@@ -43,9 +43,6 @@ pipeline {
                         }
                     }
 
-                    def order = env.ENV_ORDER.split(" ")
-                    envs = envs.unique().sort { a, b -> order.indexOf(a) <=> order.indexOf(b) }
-
                     env.CHANGED_ENVS = envs.join(" ")
                     currentBuild.description = "Deploy: ${env.CHANGED_ENVS}"
                 }
