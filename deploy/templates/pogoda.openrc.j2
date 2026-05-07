@@ -1,0 +1,33 @@
+#!/sbin/openrc-run
+
+name="pogoda"
+description="Pogoda"
+
+command="${UVICORN_BIN}"
+command_args="${UVICORN_APP} --host ${HOST} --port ${PORT}"
+command_user="${APP_USER}:${APP_GROUP}"
+
+directory="${APP_DIR}"
+pidfile="${PID_FILE}"
+
+command_background="yes"
+output_log="${LOG_FILE}"
+error_log="${LOG_FILE}"
+
+depend() {
+    need net
+    after firewall
+}
+
+start_pre() {
+    checkpath -d -o "${APP_USER}:${APP_GROUP}" -m 0755 /var/log/pogoda
+
+    if [ ! -f "${ENV_FILE}" ]; then
+        eerror "Missing env file: ${ENV_FILE}"
+        return 1
+    fi
+
+    set -a
+    . "${ENV_FILE}"
+    set +a
+}

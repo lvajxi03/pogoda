@@ -1,0 +1,14 @@
+APP_DIR="{{ app_dir }}"
+APP_USER="{{ app_user }}"
+APP_GROUP="{{ app_group }}"
+
+HOST="{{ host_bind }}"
+PORT="{{ port_bind }}"
+
+ENV_FILE="{{ app_dir }}/.env"
+
+UVICORN_APP="{{ app_module }}"
+UVICORN_BIN="{{ venv_dir }}/bin/uvicorn"
+
+LOG_FILE="/var/log/pogoda/pogoda.log"
+PID_FILE="/run/pogoda.pid"

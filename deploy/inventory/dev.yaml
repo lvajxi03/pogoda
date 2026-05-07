@@ -1,0 +1,14 @@
+all:
+  vars:
+    ansible_shell_executable: /bin/bash
+    app_dir: /opt/pogoda
+    app_group: pogoda
+    app_module: app.main:app
+    app_name: pogoda
+    app_user: pogoda
+    env_name: dev
+    host_bind: 0.0.0.0
+    port_bind: 8000
+    service_name: pogoda
+    venv_dir: /opt/pogoda/venv
+    version: v0.0.1
