@@ -44,6 +44,7 @@ pipeline {
                     }
 
                     def order = env.ENV_ORDER.split(" ")
+		    echo "sorted: $envs (koniec)"
                     envs = envs.unique().sort { a, b -> order.indexOf(a) <=> order.indexOf(b) }
 
                     env.CHANGED_ENVS = envs.join(" ")
