@@ -10,9 +10,6 @@ pipeline {
         timestamps()
     }
 
-    environment {
-    }
-
     stages {
         stage('Detect changed deploy configs') {
             steps {
