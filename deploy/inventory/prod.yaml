@@ -11,5 +11,5 @@ all:
     port_bind: 20573
     service_name: pogoda
     venv_dir: /opt/pogoda/venv
-    version: v0.0.2
+    version: v0.0.2.1
 

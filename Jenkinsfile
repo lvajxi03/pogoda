@@ -11,7 +11,6 @@ pipeline {
     }
 
     environment {
-        ENV_ORDER = "dev int prod"
     }
 
     stages {
