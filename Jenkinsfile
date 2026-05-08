@@ -10,10 +10,6 @@ pipeline {
         timestamps()
     }
 
-    environment {
-        ENV_ORDER = "dev int prod"
-    }
-
     stages {
         stage('Detect changed deploy configs') {
             steps {
@@ -42,9 +38,6 @@ pipeline {
                             envs.add(envName)
                         }
                     }
-
-                    def order = env.ENV_ORDER.split(" ")
-                    envs = envs.unique().sort { a, b -> order.indexOf(a) <=> order.indexOf(b) }
 
                     env.CHANGED_ENVS = envs.join(" ")
                     currentBuild.description = "Deploy: ${env.CHANGED_ENVS}"
